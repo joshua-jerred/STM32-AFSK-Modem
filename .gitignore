@@ -1,4 +1,4 @@
 topic_proposal/out
 *.o
 *.elf
-project/build
+stm32_afsk/build
