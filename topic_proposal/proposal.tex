@@ -10,15 +10,21 @@
 
 \section*{Introduction}
 
-Historically, data modulation for use in radio networks has been implemented in hardware. For each different type of modulation, you needed different hardware, both on the transmitting and receiving end. With the rise of more powerful computers, there has been a shift towards agnostic hardware that is given it's power through Software Defined Radio (SDR). Micro-controllers (MCUs), just like any other hardware, have continually become more computationally capable while also becoming cheaper and consuming less power.
+Historically, data modulation, for use in communication via radio, has been implemented in hardware. For each different type of modulation, you needed different hardware, both on the transmitting and receiving end. With the rise of more powerful computers, there has been a shift towards agnostic hardware that is given it's power through Software Defined Radio (SDR). Micro-controllers (MCUs), just like any other hardware, have continually become more computationally capable while also becoming cheaper and consuming less power. It seems that modern MCUs should be able to handle the task of audio modulation and demodulation in software, without the need for any modulation-mode specific hardware.
 
-A paper published in 1998 by John Hansen, of State University of New York, talked about modulation of simple AX.25 packets on top of the AFSK modulation scheme, using PIC MCUs \cite{hansen_ax25}. John Hansen specifically mentioned using the PIC16F84 MCU. This is a 8-bit MCU with 1 KB of flash storage, 68 bytes of RAM, and runs at 20MHz\cite{pic_datasheet}.
+\section*{Background}
 
-Since this time, ST has released the STM32 series of MCUs. These are 32-bit ARM Cortex-M MCUs which are just as affordable as the PIC MCUs were. A standard performance STM32, such as the STM32F4 series, has up to 2 MB of flash storage, 384 KB of RAM, and runs at up to 180 MHz\cite{st_datasheet}.
+A paper published in 1998 by John Hansen, of State University of New York, talked about modulation of simple AX.25 packets on top of the AFSK modulation scheme, using PIC MCUs \cite{hansen_ax25}. John Hansen specifically mentioned using the PIC16F84 MCU. This is a 8-bit MCU with 1 KB of flash storage, 68 bytes of RAM, and runs at 20MHz\cite{pic_datasheet}. Since this time, ST has released the STM32 series of MCUs. These are 32-bit ARM Cortex-M MCUs which are just as affordable as the PIC MCUs were. A standard performance STM32, such as the STM32F4 series, has up to 2 MB of flash storage, 384 KB of RAM, and runs at up to 180 MHz\cite{st_datasheet}.
 
-Audio Frequency Shift Keying (AFSK) is a method of modulating the frequency of a carrier signal to encode data. This modulation mode is commonly used in amateur radio applications, most commonly used alongside the AX.25 packet structure. Traditionally modulating data at a rate of 1200 bits-per-second; it's not especially fast, but it can provide reliable data communication over long distances. This modulation method, along with AX.25, is used during amateur radio events hosted on the International Space Station. Radio operators can send packets to the ISS using low-cost equipment and 
+Audio Frequency Shift Keying (AFSK) is a method of modulating the frequency of a carrier signal to encode data. This modulation mode is commonly used in amateur radio applications, most commonly used alongside the AX.25 packet structure\cite{ax25_spec}. Traditionally modulating data at a rate of 1200 bits-per-second; it's not especially fast, but it can provide reliable data communication over long distances\cite{5167882}.
 
-Often times a specialized bit of hardware, called a Terminal Node Controller (TNC), is used for AX.25 and AFSK implementation. These devices can range in price, normally starting out over \$150. It seems as if the STM32 should be more than powerful enough to modulate and demodulate AFSK signals in software without support from any external hardware, creating common hardware that can be used for many different modes of audio modulation.
+Often times a specialized bit of hardware, called a Terminal Node Controller (TNC), is used for AX.25 and AFSK implementation. These devices can range in price, normally starting out over \$150.
+
+\section*{Rationale}
+
+It seems as if the STM32 should be more than powerful enough to modulate and demodulate AFSK signals in software without support from any external hardware. This would show that common hardware that can be used to implement many different modes of data modulation.
+
+Implementing AFSK modulation on a MCU has been done before\cite{8475994}, but non-embedded software was used for demodulation. This research would be to implement both modulation and demodulation on the same MCU allowing for a common hardware platform to be used on both ends of the communication link.
 
 \section*{Hardware Considerations}
 The only hardware requirement would be an STM32 that has at least one internal Digital-to-Analog converter (DAC) and at least one Analog-to-Digital converter (ADC). The easiest way to do this would be with an STM32 Nucleo board, a bit of hardware used for prototyping hardware design, similar to an Arduino. Availability is a concern, so a good choice would be the STM32F429ZI. ST sells a Nucleo prototyping board using this MCU. The F429 has the DACs and ADCs required for this task. Running at 180 MHz with 2 MB of flash, 256 KB of SRAM, it should be powerful enough to do so.
@@ -50,21 +56,7 @@ Seeing as the time to complete this research is fairly short, the software stack
 
 \end{itemize}
 
-
-
-\section*{Sources}
-
 \bibliographystyle{plain}
 \bibliography{refs.bib}
-
-https://ieeexplore-ieee-org.libproxy.utahtech.edu/document/8475994
-
-https://ieeexplore-ieee-org.libproxy.utahtech.edu/document/4502213
-
-https://www.ti.com/lit/an/slaa618/slaa618.pdf?ts=1691858157091
-
-https://www.tapr.org/pdf/DCC1998-PICet-W2FS.pdf
-
-https://ieeexplore-ieee-org.libproxy.utahtech.edu/document/8475994
 
 \end{document}
