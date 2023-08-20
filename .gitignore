@@ -1,1 +1,3 @@
 topic_proposal/out
+*.o
+*.elf
