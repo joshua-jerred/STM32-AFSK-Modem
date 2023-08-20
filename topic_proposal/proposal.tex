@@ -2,7 +2,7 @@
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
 
-\title{Research Proposal - Using Modern Micro-Controllers for Audio Frequency Shift Keying in Software}
+\title{Research Topic Proposal - Using Modern Micro-Controllers for Audio Modulation and Demodulation, Agnostic of Hardware}
 \author{Joshua Jerred}
 \date{\today}
 \begin{document}
@@ -10,9 +10,11 @@
 
 \section*{Introduction}
 
-Historically, data modulation for use in radio networks has been implemented in hardware. For each different type of modulation, you needed different hardware, both on the transmitting and receiving end. Over the years there has been a shift towards agnostic hardware that is given it's power through Software Defined Radio (SDR). Micro-controllers (MCUs), just like any other hardware, have continually become more computationally capable while also becoming cheaper and consuming less power.
+Historically, data modulation for use in radio networks has been implemented in hardware. For each different type of modulation, you needed different hardware, both on the transmitting and receiving end. With the rise of more powerful computers, there has been a shift towards agnostic hardware that is given it's power through Software Defined Radio (SDR). Micro-controllers (MCUs), just like any other hardware, have continually become more computationally capable while also becoming cheaper and consuming less power.
 
-A paper published in 1998 by John Hansen, of State University of New York, talked about modulation of simple AX.25 packets on top of the AFSK modulation scheme, using PIC MCUs \cite{hansen_ax25}. **something here about the PIC he used** Since this time, ST has released the STM32 series of MCUs. These are 32-bit ARM Cortex-M MCUs which are just as affordable as the PIC MCUs were. A standard performance STM32, such as the STM32F4 series, has up to 2 MB of flash storage, 384 KB of RAM, and runs at up to 180 MHz\cite{st_datasheet}.
+A paper published in 1998 by John Hansen, of State University of New York, talked about modulation of simple AX.25 packets on top of the AFSK modulation scheme, using PIC MCUs \cite{hansen_ax25}. John Hansen specifically mentioned using the PIC16F84 MCU. This is a 8-bit MCU with 1 KB of flash storage, 68 bytes of RAM, and runs at 20MHz\cite{pic_datasheet}.
+
+Since this time, ST has released the STM32 series of MCUs. These are 32-bit ARM Cortex-M MCUs which are just as affordable as the PIC MCUs were. A standard performance STM32, such as the STM32F4 series, has up to 2 MB of flash storage, 384 KB of RAM, and runs at up to 180 MHz\cite{st_datasheet}.
 
 Audio Frequency Shift Keying (AFSK) is a method of modulating the frequency of a carrier signal to encode data. This modulation mode is commonly used in amateur radio applications, most commonly used alongside the AX.25 packet structure. Traditionally modulating data at a rate of 1200 bits-per-second; it's not especially fast, but it can provide reliable data communication over long distances. This modulation method, along with AX.25, is used during amateur radio events hosted on the International Space Station. Radio operators can send packets to the ISS using low-cost equipment and 
 
