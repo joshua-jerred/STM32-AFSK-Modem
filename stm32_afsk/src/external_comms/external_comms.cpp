@@ -52,7 +52,7 @@ void ExternalComms::process() {
     sendAckAndClearBuffer();
     break;
   case bst::to_underlying(MessageId::NEW_TX):
-    sendAckAndClearBuffer();
+    processNewTxPacket(rx_buffer);
     break;
   default:
     sendErrorAndClearBuffer();

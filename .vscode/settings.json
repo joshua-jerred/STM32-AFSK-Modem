@@ -10,7 +10,7 @@
     "UART",
     "usart"
   ],
-  "cmake.sourceDirectory": "${workspaceFolder}/project",
+  "cmake.sourceDirectory": "${workspaceFolder}/stm32_afsk",
   "cmake.useCMakePresets": "always",
   "files.associations": {
     "stm32f4xx_hal_uart.h": "c",

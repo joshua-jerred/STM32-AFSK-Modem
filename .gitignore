@@ -2,3 +2,4 @@ topic_proposal/out
 *.o
 *.elf
 stm32_afsk/build
+__pycache__
