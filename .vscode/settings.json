@@ -1,10 +1,23 @@
 {
   "cSpell.words": [
+    "COMMS",
+    "hdma",
+    "hdmarx",
     "HFSM",
+    "huart",
     "Nucleo",
     "SRAM",
-    "UART"
+    "UART",
+    "usart"
   ],
   "cmake.sourceDirectory": "${workspaceFolder}/project",
-  "cmake.useCMakePresets": "always"
+  "cmake.useCMakePresets": "always",
+  "files.associations": {
+    "stm32f4xx_hal_uart.h": "c",
+    "array": "cpp",
+    "string": "cpp",
+    "string_view": "cpp",
+    "ranges": "cpp",
+    "cstdint": "cpp"
+  }
 }
