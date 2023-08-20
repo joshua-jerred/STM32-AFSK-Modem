@@ -1,3 +1,4 @@
 topic_proposal/out
 *.o
 *.elf
+project/build

@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "arm_none_eabi_gcc",
+      "displayName": "arm_none_eabi_gcc",
+      "description": "",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/lib/booster_seat/toolchains/arm_none_eabi_gcc.cmake"
+      },
+      "environment": {
+        "ARM_NONE_EABI":"ON",
+        "BOOSTERSEAT_EMBEDDED":"ON",
+        "BST_EMBD_STM32F411":"ON"
+      }
+    },
+    {
+      "name": "gcc_host",
+      "displayName": "gcc_host",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/lib/booster_seat/toolchains/gcc_linux_host.cmake"
+      },
+      "environment": {
+      }
+    }
+  ]
+}

@@ -4,5 +4,7 @@
     "Nucleo",
     "SRAM",
     "UART"
-  ]
+  ],
+  "cmake.sourceDirectory": "${workspaceFolder}/project",
+  "cmake.useCMakePresets": "always"
 }

@@ -1,0 +1,4 @@
+[submodule "project/lib/booster_seat"]
+	path = project/lib/booster_seat
+	url = git@github.com:joshua-jerred/Boost_erSeat.git
+	branch = embedded
