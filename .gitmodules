@@ -2,3 +2,6 @@
 	path = project/lib/booster_seat
 	url = git@github.com:joshua-jerred/Boost_erSeat.git
 	branch = embedded
+[submodule "project/lib/etl"]
+	path = project/lib/etl
+	url = https://github.com/ETLCPP/etl.git
