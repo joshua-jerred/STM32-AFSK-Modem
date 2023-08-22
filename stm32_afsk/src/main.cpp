@@ -27,6 +27,7 @@
 #include <etl/array.h>
 
 #include "external_comms/external_comms.hpp"
+#include "waveform.hpp"
 
 typedef StaticTask_t osStaticThreadDef_t;
 
@@ -70,9 +71,17 @@ static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 
 void defaultTask(void *argument) {
+  HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
+  uint16_t dac_index = 0;
+  uint16_t delta = 1;
   for (;;) {
-    g_primary_status_led.toggle();
-    osDelay(1000);
+    // g_primary_status_led.toggle();
+    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R,
+                     SineWaveForm.at(dac_index));
+    dac_index += delta;
+    if (dac_index > SineWaveForm.size() - 1) {
+      dac_index = 0;
+    }
   }
 }
 
