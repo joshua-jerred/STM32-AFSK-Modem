@@ -86,9 +86,10 @@ void defaultTask(void *argument) {
 }
 
 void externalCommsTask(void *argument) {
-  for (;;) {
+  while (true) {
+
     g_external_comms.process();
-    osDelay(10);
+    osDelay(1000);
   }
 }
 

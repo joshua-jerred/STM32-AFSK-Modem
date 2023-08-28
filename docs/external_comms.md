@@ -9,11 +9,12 @@ will be used.
 
 |      Field      | Size  |
 | :-------------: | :---: |
-|      Flag       |   2   |
+|      Flag       |   1   |
 |    Packet ID    |   1   |
 | Payload Length  |   2   |
 | ... Payload ... | 0-512 |
 |       CRC       |   2   |
+|      Flag       |   1   |
 
 Packets are sent in big-endian order, with the flag being the first byte sent,
 and the CRC being the last two bytes sent. The minimum packet size is 7 bytes
@@ -23,7 +24,11 @@ when there is no payload. The maximum packet size is 519 bytes when there is a
 The packet structure is as follows:
 
 ### Flag
-Two bytes that are always `0x0A50` to indicate the start of a packet.
+One byte at the start of the packet, and one byte at the end of the packet.
+Both are always `0xA5` to indicate the start and end of a packet. These bytes
+are not included in the CRC calculation. The value `0xA5` may be within the
+payload.
+Two bytes that are always `0xA5` to indicate the start of a packet.
 
 ### Packet ID
 The packet ID is a 8-bit unsigned integer that identifies the type of packet.

@@ -54,6 +54,9 @@ Seeing as the time to complete this research is fairly short, the software stack
   \item[\textbf{GCC Arm None ABI}]
   GCC Arm None ABI is a bare metal GCC compiler that supports ARM-Cortex platforms. Along with the compiler, there are basic templates that include bare minimum assembly entry point code for configuring the interrupt vector table and setting up an environment for C/C++ code prior to the call to main. Additionally there are template GCC linker files for each STM32 MCU that set up the address space and required sections in order to compile and run C/C++ code.
 
+  \item[\textbf{ADC, DAC, UART DMA}]
+  Although the STM32 is fast device, generating realtime audio and sampling audio can be inturrupted by many different system processes. Using features such as Direct Memory Access (DMA) can allow for the ADC and DAC to be configured to run Independent from the core clock. This will allow for reliable audio generation and sampling. This feature can also be used for UART communication. 
+
 \end{itemize}
 
 \bibliographystyle{plain}
