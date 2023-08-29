@@ -13,8 +13,7 @@
 #include "external_comms.hpp"
 #include "message_ids.hpp"
 
-constexpr uint8_t kPacketStart1 = 0xAA;
-constexpr uint8_t kPacketStart2 = 0x55;
+constexpr uint8_t kPacketFlag = 0xA5;
 
 void ExternalComms::process() {
   if (uart_.getNumBytesReceived() == 0) { // No Bytes Received
@@ -31,13 +30,13 @@ void ExternalComms::process() {
 
   auto &rx_buffer = uart_.receive();
   // Check for the start of a packet
-  if (rx_buffer.at(0) != kPacketStart1 || rx_buffer.at(1) != kPacketStart2) {
+  if (rx_buffer.at(0) != kPacketFlag) {
     sendErrorAndClearBuffer();
     return;
   }
 
-  uint8_t packet_id = rx_buffer.at(2);
-  uint16_t payload_size = rx_buffer.at(3) << 8 | rx_buffer.at(4);
+  uint8_t packet_id = rx_buffer.at(1);
+  uint16_t payload_size = rx_buffer.at(2) << 8 | rx_buffer.at(3);
 
   // Check if the packet has been fully received
   if (payload_size > num_bytes_received - 7) {
@@ -61,38 +60,26 @@ void ExternalComms::process() {
 }
 
 void ExternalComms::sendErrorAndClearBuffer() {
-  etl::array<uint8_t, 7> packet = {kPacketStart1,
-                                   kPacketStart2,
-                                   bst::to_underlying(MessageId::ERROR),
-                                   0x00,
-                                   0x00,
-                                   'E',
-                                   'R'};
+  etl::array<uint8_t, 7> packet = {
+      kPacketFlag, bst::to_underlying(MessageId::ERROR), 0x00, 0x00, 'E', 'R',
+      kPacketFlag};
   uart_.send(packet);
   uart_.clearBuffer();
 }
 
 void ExternalComms::sendAckAndClearBuffer() {
-  etl::array<uint8_t, 7> packet = {kPacketStart1,
-                                   kPacketStart2,
-                                   bst::to_underlying(MessageId::ACK),
-                                   0x00,
-                                   0x00,
-                                   'A',
-                                   'K'};
+  etl::array<uint8_t, 7> packet = {
+      kPacketFlag, bst::to_underlying(MessageId::ACK), 0x00, 0x00, 'A', 'K',
+      kPacketFlag};
   uart_.send(packet);
   uart_.clearBuffer();
 }
 
 void ExternalComms::processNewTxPacket(
     etl::array<uint8_t, bst::kUartRxBufferSize> &rx_buffer) {
-  etl::array<uint8_t, 7> packet = {kPacketStart1,
-                                   kPacketStart2,
-                                   bst::to_underlying(MessageId::ACK),
-                                   0x00,
-                                   0x00,
-                                   'T',
-                                   'X'};
+  etl::array<uint8_t, 7> packet = {
+      kPacketFlag, bst::to_underlying(MessageId::ACK), 0x00, 0x00, 'T', 'X',
+      kPacketFlag};
   uart_.send(packet);
   uart_.clearBuffer();
 }

@@ -1,0 +1,16 @@
+@startuml
+
+state "Transmitting" as Transmitting
+state "Receiving" as Receiving
+
+state "Idle" as Idle
+  Idle: - Checks for UART activity
+  Idle: - Checks for hardware indication of packet reception
+
+[*] --> Idle
+Idle --> Transmitting : Commanded to send a packet via UART
+Idle --> Receiving : Hardware indicates possible reception
+Transmitting --> Idle : Packet sent
+Receiving --> Idle : Packet received/timeout
+
+@enduml

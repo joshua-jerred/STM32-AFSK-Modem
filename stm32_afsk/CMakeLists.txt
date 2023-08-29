@@ -18,6 +18,7 @@ add_subdirectory(lib/FreeRTOS)
 # Add the executable
 add_executable(afsk_link.elf
   src/main.cpp
+  src/hardware/hardware_init.cpp
   src/external_comms/external_comms.cpp
 
   src/stm32f4xx_hal_msp.c
@@ -31,6 +32,7 @@ add_executable(afsk_link.elf
 target_include_directories(afsk_link.elf
   PRIVATE
     src
+    src/hardware
     src/external_comms
 )
 target_link_libraries(afsk_link.elf

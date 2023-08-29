@@ -1,5 +1,4 @@
-topic_proposal/out
-*.o
-*.elf
+latex/out
 stm32_afsk/build
 __pycache__
+.metadata

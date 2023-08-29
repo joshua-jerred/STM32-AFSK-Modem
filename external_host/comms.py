@@ -1,7 +1,6 @@
 import serial
 
-PACKET_START1 = 0xAA
-PACKET_START2 = 0x55
+PACKET_FLAG = 0xA5
 
 MESSAGE_ID_HANDSHAKE = 0x01
 MESSAGE_ID_ACK = 0x03
@@ -19,16 +18,24 @@ class Comms:
         self.serial.close()
 
     def _send(self, message_id, payload:list[int]):
-        # length_bytes = len(payload).to_bytes(2, 'big')
-        packet = bytearray([PACKET_START1, PACKET_START2, message_id, 0, 0] + payload + [0x00, 0x00])
+        length_msb = len(payload) >> 8
+        length_lsb = len(payload) & 0xFF
+        crc_msb = 0
+        crc_lsb = 0
+        packet = bytearray([PACKET_FLAG, message_id, length_msb, length_lsb] + payload + [crc_msb, crc_lsb, PACKET_FLAG])
         self.serial.write(packet)
 
     def _receive(self, expected_length):
         ret_packet = list(self.serial.read(expected_length))
-        if ret_packet[0] != PACKET_START1 or ret_packet[1] != PACKET_START2:
+
+        MINIMUM_LENGTH = 2 + 1 + 2 + 2
+        if len(ret_packet) < MINIMUM_LENGTH:
+            raise Exception('Invalid packet length', len(ret_packet), MINIMUM_LENGTH)
+
+        if ret_packet[0] != PACKET_FLAG:
             raise Exception('Invalid packet start')
-        message_id = ret_packet[2]
-        payload_length = ret_packet[4] << 8 | ret_packet[3]
+        message_id = ret_packet[1]
+        payload_length = ret_packet[3] << 8 | ret_packet[2]
         if len(ret_packet) != payload_length + 7:
             raise Exception('Invalid packet length', len(ret_packet), payload_length)
 

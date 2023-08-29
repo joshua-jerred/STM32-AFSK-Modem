@@ -18,7 +18,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
+#include "hardware/macros.h"
 #include "stm32f4xx_it.h"
 #include "FreeRTOS.h"
 #include "task.h"
