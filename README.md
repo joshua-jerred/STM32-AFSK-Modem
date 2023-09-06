@@ -21,3 +21,16 @@ not so important directories
 https://github.com/users/joshua-jerred/projects/7/views/1
 
 ^ I may need to give you access to this.
+
+***
+***
+
+# Notes for Me
+Required Apt Packages:
+- `cmake` - For CMake...
+- `ninja-build` - For CMake to use a build system
+- `gcc-arm-none-eabi` - For compiling for the STM32
+- `stlink-tools` - For flashing the STM32 (st-flash)
+- `gdb-multiarch` - For debugging the STM32
+
+Run `ln -s /usr/bin/gdb-multiarch /usr/bin/arm-none-eabi-gdb` to add `arm-none-eabi-gdb` to the path

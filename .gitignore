@@ -2,3 +2,4 @@ latex/out
 stm32_afsk/build
 __pycache__
 .metadata
+*.log

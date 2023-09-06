@@ -11,6 +11,8 @@
 
 #include "macros.h"
 
+#include "external_comms/external_comms_config.hpp"
+
 #include <Bst/Embd/uart.hpp>
 
 extern ADC_HandleTypeDef hadc1;
@@ -18,7 +20,7 @@ extern DAC_HandleTypeDef hdac;
 extern UART_HandleTypeDef huart3;
 extern DMA_HandleTypeDef hdma_usart3_rx;
 extern DMA_HandleTypeDef hdma_usart3_tx;
-extern bst::Uart g_external_uart;
+extern bst::Uart<kExternalUartRxBufferSize> g_external_uart;
 
 void initHardware();
 

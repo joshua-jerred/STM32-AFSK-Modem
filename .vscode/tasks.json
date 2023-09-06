@@ -1,0 +1,39 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "flash",
+      "type": "shell",
+      "command": "${workspaceFolder}/stm32_afsk/flash.sh",
+      "detail": "flash the stm32 with the application",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/stm32_afsk",
+        "env": {
+          "BUILD_ELF": "0"
+        }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "build and flash",
+      "type": "shell",
+      "command": "${workspaceFolder}/stm32_afsk/flash.sh",
+      "detail": "build the elf file then flash the stm32 with the application",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}/stm32_afsk",
+        "env": {
+          "BUILD_ELF": "1"
+        }
+      },
+      "problemMatcher": []
+    }
+  ]
+}

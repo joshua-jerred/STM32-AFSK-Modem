@@ -45,3 +45,11 @@ target_link_libraries(afsk_link.elf
 set(LINKER_SCRIPT STM32F429ZITX_FLASH.ld)
 configure_file(${LINKER_SCRIPT} ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 set(CMAKE_EXE_LINKER_FLAGS "-T${LINKER_SCRIPT}")
+
+# Launch Command
+add_custom_target(launch
+  COMMAND arm-none-eabi-objcopy -O binary ${CMAKE_CURRENT_BINARY_DIR}/afsk_link.elf ${CMAKE_CURRENT_BINARY_DIR}/afsk_link.bin
+  COMMAND st-flash --reset write ${CMAKE_CURRENT_BINARY_DIR}/afsk_link.bin 0x8000000
+  DEPENDS afsk_link.elf
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)

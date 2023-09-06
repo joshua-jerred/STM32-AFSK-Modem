@@ -7,3 +7,4 @@
 - Ren helped me realize the bigger picture of the project
   - What are the actual applications of this project?
   - How will it be used?
+- Find sources outside of ham radio related topics

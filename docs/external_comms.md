@@ -5,6 +5,10 @@ External Comms will be done via a hardware UART. If an ST-Link is available,
 the UART will be used via ST-Link Virtual COM Port (VCP). If not, an FTDI cable
 will be used.
 
+## Definitions
+Controller - The external host (Linux/Windows Machine)
+Peripheral - The embedded device (STM32)
+
 ## Basic Packet Structure
 
 |      Field      | Size  |
@@ -43,4 +47,49 @@ A variable length payload. The length is specified by the Payload Length field.
 
 ### CRC
 The CRC is a 16-bit unsigned integer that is the CRC-16 of the entire packet
-excluding the CRC fields. CRC 1 is the MSB, CRC 2 is the LSB.
+excluding the CRC fields and the flag fields. MSB first.
+
+***
+
+## Packet Types
+
+### 0x01 - Test Packet
+- Payload Length: 0
+- Payload: None
+- Description: This packet is sent by the controller, the peripheral will
+  respond with an ACK packet if received correctly.
+
+### 0x02 - Error Packet
+- Payload Length: 2
+- Payload: Packet ID of the packet that caused the error, Error Code
+- Description: This packet is sent by the peripheral in response to a request
+  to indicate that an error occurred.
+#### Error Codes
+| Error Code |           Description            |
+| :--------: | :------------------------------: |
+|    0x01    |        Invalid Start Flag        |
+|    0x02    |        Invalid Packet ID         |
+|    0x03    |       Invalid Payload Size       |
+|    0x04    |           Invalid CRC            |
+|    0x05    |         Invalid End Flag         |
+|    0x06    |        Message Timed Out         |
+|    0x07    |     Busy - (TXing or RXing)      |
+|    0x08    | Invalid Payload For Message Type |
+|            |                                  |
+
+### 0x03 - ACK Packet
+- Payload Length: 1
+- Payload: The packet ID of the packet that is being acknowledged.
+- Description: This packet is sent by the peripheral to acknowledge that a
+  packet was received correctly.
+
+### 0x04 - NEW_TX Packet
+- Payload Length: 0-512
+- Payload: The data to be transmitted
+- Description: This packet is sent by the controller to start a new transmission
+  of data. The peripheral will respond with an ACK before starting the TX.
+
+***
+
+## Sample Test Packet
+A5 01 00 00 00 00 A5

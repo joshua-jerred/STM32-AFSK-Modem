@@ -26,7 +26,8 @@ DAC_HandleTypeDef hdac;
 UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart3_rx;
 DMA_HandleTypeDef hdma_usart3_tx;
-bst::Uart g_external_uart(&huart3, &hdma_usart3_rx, &hdma_usart3_tx);
+bst::Uart<kExternalUartRxBufferSize> g_external_uart(&huart3, &hdma_usart3_rx,
+                                                     &hdma_usart3_tx);
 
 static bst::Gpio g_primary_status_led(GPIOB, GPIO_PIN_0);
 static bst::Gpio g_external_comms_status_led(GPIOB, GPIO_PIN_7);
@@ -59,6 +60,7 @@ void defaultTask(void *argument) {
   uint16_t dac_index = 0;
   uint16_t delta = 1;
   for (;;) {
+    g_primary_status_led.toggle();
     // g_primary_status_led.toggle();
     HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R,
                      SineWaveForm.at(dac_index));
@@ -66,13 +68,12 @@ void defaultTask(void *argument) {
     if (dac_index > SineWaveForm.size() - 1) {
       dac_index = 0;
     }
-    osDelay(1);
+    osDelay(500);
   }
 }
 
 void externalCommsTask(void *argument) {
   while (true) {
-
     g_external_comms.process();
     osDelay(1);
   }

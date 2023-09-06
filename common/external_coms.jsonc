@@ -1,0 +1,45 @@
+{
+  "PACKET_IDS": {
+    "UNKNOWN": {
+      "name": "Unknown",
+      "id": "0x00",
+      "description": "Unknown Packet Type",
+      "payload_size": -1 // -1 means variable size
+    },
+    "HANDSHAKE": {
+      "name": "Handshake",
+      "id": "0x01",
+      "description": "Handshake Packet",
+      "payload_size": 0
+    },
+    "ERROR": {
+      "name": "Error",
+      "id": "0x02",
+      "description": "Error Packet",
+      "payload_size": 2
+    },
+    "ACK": {
+      "name": "Acknowledge",
+      "id": "0x03",
+      "description": "Acknowledge Packet",
+      "payload_size": 1
+    }
+  },
+  "ERROR_IDS":{
+    "UNKNOWN": {
+      "name": "Unknown",
+      "id": "0x00",
+      "description": "Unknown Error"
+    },
+    "INVALID_START_FLAG": {
+      "name": "Invalid Start Flag",
+      "id": "0x01",
+      "description": "The start flag of the packet was invalid"
+    },
+    "INVALID_PACKET_ID": {
+      "name": "Invalid Packet ID",
+      "id": "0x02",
+      "description": "The ID of the packet was invalid"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "configurations": [
+    {
+      "name":"Debug Project",
+      "cwd": "${workspaceFolder}/stm32_afsk",
+      "executable": "${workspaceFolder}/stm32_afsk/build/arm_none_eabi_gcc/afsk_link.elf",
+      "request": "launch",
+      "type": "cortex-debug",
+      // "preLaunchTask": "flash",
+      "servertype": "stutil",
+      "device": "STM32F429ZI",
+      "gdbPath": "arm-none-eabi-gdb",
+
+
+    }
+  ]
+}
