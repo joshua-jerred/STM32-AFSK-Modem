@@ -4,6 +4,7 @@
     {
       "label": "flash",
       "type": "shell",
+      "group": "build",
       "command": "${workspaceFolder}/stm32_afsk/flash.sh",
       "detail": "flash the stm32 with the application",
       "presentation": {
@@ -21,6 +22,7 @@
     {
       "label": "build and flash",
       "type": "shell",
+      "group": "build",
       "command": "${workspaceFolder}/stm32_afsk/flash.sh",
       "detail": "build the elf file then flash the stm32 with the application",
       "presentation": {

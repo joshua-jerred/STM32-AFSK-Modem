@@ -15,7 +15,9 @@
 
 #include <Bst/Embd/uart.hpp>
 
+extern TIM_HandleTypeDef htim6;
 extern ADC_HandleTypeDef hadc1;
+extern DMA_HandleTypeDef hdma_adc1;
 extern DAC_HandleTypeDef hdac;
 extern UART_HandleTypeDef huart3;
 extern DMA_HandleTypeDef hdma_usart3_rx;

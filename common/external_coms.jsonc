@@ -23,9 +23,21 @@
       "id": "0x03",
       "description": "Acknowledge Packet",
       "payload_size": 1
+    },
+    "INC": {
+      "name": "IncreaseFrequency",
+      "id": "0x04",
+      "description": "Increase Frequency Packet",
+      "payload_size": 0
+    },
+    "DEC": {
+      "name": "DecreaseFrequency",
+      "id": "0x05",
+      "description": "Decrease Frequency Packet",
+      "payload_size": 0
     }
   },
-  "ERROR_IDS":{
+  "ERROR_IDS": {
     "UNKNOWN": {
       "name": "Unknown",
       "id": "0x00",

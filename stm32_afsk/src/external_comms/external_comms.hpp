@@ -25,8 +25,8 @@ constexpr uint16_t kUartMaxPacketSize = 512 + 7;
 class ExternalComms {
 public:
   ExternalComms(bst::Uart<kExternalUartRxBufferSize> &hardware_uart,
-                bst::Gpio &status_led)
-      : uart_(hardware_uart), status_led_(status_led) {
+                bst::Gpio &status_led, TIM_HandleTypeDef &htim6)
+      : uart_(hardware_uart), status_led_(status_led), htim6_(htim6) {
   }
 
   void process();
@@ -58,6 +58,8 @@ private:
   bst::Gpio &status_led_;
 
   etl::vector<uint8_t, kUartMaxPacketSize> tx_buffer_;
+
+  TIM_HandleTypeDef &htim6_;
 };
 
 #endif /* EXTERNAL_COMMS_HPP_ */

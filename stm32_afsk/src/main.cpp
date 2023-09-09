@@ -17,15 +17,19 @@
 #include "assert_handler.h"
 #include "external_comms/external_comms.hpp"
 #include "hardware/hardware_init.hpp"
-#include "waveform.hpp"
+#include "wavedriver/waveform.hpp"
 
 typedef StaticTask_t osStaticThreadDef_t;
 
+DMA_HandleTypeDef hdma_adc1;
+DMA_HandleTypeDef hdma_dac1;
+DMA_HandleTypeDef hdma_usart3_rx;
+DMA_HandleTypeDef hdma_usart3_tx;
+
+TIM_HandleTypeDef htim6;
 ADC_HandleTypeDef hadc1;
 DAC_HandleTypeDef hdac;
 UART_HandleTypeDef huart3;
-DMA_HandleTypeDef hdma_usart3_rx;
-DMA_HandleTypeDef hdma_usart3_tx;
 bst::Uart<kExternalUartRxBufferSize> g_external_uart(&huart3, &hdma_usart3_rx,
                                                      &hdma_usart3_tx);
 
@@ -33,7 +37,7 @@ static bst::Gpio g_primary_status_led(GPIOB, GPIO_PIN_0);
 static bst::Gpio g_external_comms_status_led(GPIOB, GPIO_PIN_7);
 
 static ExternalComms g_external_comms(g_external_uart,
-                                      g_external_comms_status_led);
+                                      g_external_comms_status_led, htim6);
 
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -55,20 +59,14 @@ const osThreadAttr_t externalComms_attributes = {
     .priority = (osPriority_t)osPriorityLow,
 };
 
-void defaultTask(void *argument) {
-  HAL_DAC_Start(&hdac, DAC_CHANNEL_1);
-  uint16_t dac_index = 0;
-  uint16_t delta = 1;
+void defaultTask(void *arHAL_DAC_SetValuegument) {
+  HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, &SineWaveForm.at(0),
+                    SineWaveForm.size(), DAC_ALIGN_12B_R);
+  HAL_TIM_Base_Start(&htim6);
+
   for (;;) {
     g_primary_status_led.toggle();
-    // g_primary_status_led.toggle();
-    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R,
-                     SineWaveForm.at(dac_index));
-    dac_index += delta;
-    if (dac_index > SineWaveForm.size() - 1) {
-      dac_index = 0;
-    }
-    osDelay(500);
+    osDelay(200);
   }
 }
 

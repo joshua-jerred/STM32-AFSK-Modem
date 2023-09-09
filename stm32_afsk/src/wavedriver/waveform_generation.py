@@ -1,6 +1,6 @@
 import math
 
-NUMBER_OF_SAMPLES = 2000
+NUMBER_OF_SAMPLES = 256
 RESOLUTION = 2**12
 FILE_NAME = "waveform.hpp"
 AMPLITUDE = 0.3
@@ -21,11 +21,13 @@ out_str = """/**
 
 """
 
-out_str += "static etl::array<uint16_t, " + str(NUMBER_OF_SAMPLES) + "> SineWaveForm = {"
+out_str += "static etl::array<uint32_t, " + str(NUMBER_OF_SAMPLES) + "> SineWaveForm = {"
 for i in range(NUMBER_OF_SAMPLES):
     sin_val = math.sin(i / NUMBER_OF_SAMPLES * 2 * math.pi)
     sample_val = int((sin_val + 1) * RESOLUTION / 2) * AMPLITUDE + MIN_VALUE
     out_str += str(int(sample_val)) + ", "
+    if i % 10 == 0:
+        out_str += "\n"
 
 out_str = out_str[:-2] + "};\n\n"
 out_str += "#endif /* WAVEFORM_HPP_ */"

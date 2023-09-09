@@ -11,5 +11,8 @@
     "usart"
   ],
   "cmake.sourceDirectory": "${workspaceFolder}/stm32_afsk",
-  "cmake.useCMakePresets": "always"
+  "cmake.useCMakePresets": "always",
+  "files.associations": {
+    "macros.h": "c"
+  }
 }
