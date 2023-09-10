@@ -10,51 +10,6 @@ MAX_PAYLOAD_SIZE = 512
 MIN_PACKET_LENGTH = 7 # with no payload
 MAX_PACKET_LENGTH = MIN_PACKET_LENGTH + MAX_PAYLOAD_SIZE
 
-class PacketIds:
-    UNKNOWN = 0x00
-    HANDSHAKE = 0x01
-    ERROR = 0x02
-    ACK = 0x03
-    NEW_TX = 0x04
-
-    @staticmethod
-    def getName(packet_id):
-        if packet_id == PacketIds.UNKNOWN:
-            return 'Unknown'
-        elif packet_id == PacketIds.HANDSHAKE:
-            return 'Handshake'
-        elif packet_id == PacketIds.ERROR:
-            return 'Error'
-        elif packet_id == PacketIds.ACK:
-            return 'ACK'
-        elif packet_id == PacketIds.NEW_TX:
-            return 'New TX'
-        else:
-            return 'Unknown'
-
-PACKET_ID_MAP = { # payload_size of -1 means variable length
-    0x00: {
-        'name': 'Unknown',
-        'payload_size': 0,
-    },
-    0x01: {
-        'name': 'Handshake',
-        'payload_size': 0,
-    },
-    0x02: {
-        'name': 'Error',
-        'payload_size': 2,
-    },
-    0x03: {
-        'name': 'ACK',
-        'payload_size': 1,
-    },
-    0x04: {
-        'name': 'New TX',
-        'payload_size': -1,
-    }
-}
-
 class Packet:
     def __init__(self):
         self.packet_id = -1
@@ -65,9 +20,6 @@ class Packet:
         self.crc_lsb = -1
 
     def __setPacketId(self, packet_id:int):
-        if packet_id not in PACKET_ID_MAP:
-            log.error(f'Invalid packet ID: {packet_id}')
-            return False
         self.packet_id = packet_id
         return True
 
@@ -164,7 +116,6 @@ class Packet:
         return bytearray([PACKET_FLAG, self.packet_id, self.payload_size_msb, self.payload_size_lsb] + self.payload + [self.crc_msb, self.crc_lsb, PACKET_FLAG])
 
     def __str__(self):
-        packet_id_str = "UNKNOWN"
-        if self.packet_id in PACKET_ID_MAP:
-            packet_id_str = PACKET_ID_MAP[self.packet_id]['name']
-        return f'PACKET - ID: {packet_id_str}, Payload Size: {self.payload_size_msb << 8 | self.payload_size_lsb}, Payload: {self.payload}, CRC: {hex(self.crc_msb)}  {hex(self.crc_lsb)}'
+        if self.packet_id == 0x02:
+            return f'ERROR PACKET: {self.payload}'
+        return f'PACKET - ID: {self.packet_id}, Payload Size: {self.payload_size_msb << 8 | self.payload_size_lsb}, Payload: {str(self.payload)}, CRC: {hex(self.crc_msb)}  {hex(self.crc_lsb)}'

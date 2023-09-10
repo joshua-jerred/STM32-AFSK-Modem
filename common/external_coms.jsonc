@@ -24,11 +24,23 @@
       "description": "Acknowledge Packet",
       "payload_size": 1
     },
-    "SET_AAR": {
-      "name": "SetTimerAAR",
+    "SET_BAUD_RATE": {
+      "name": "Set Baud Rate",
       "id": "0x04",
-      "description": "Set the AAR of the timer",
+      "description": "Set baud rate. Options: 50, 300, 1200",
       "payload_size": 2
+    },
+    "SEND_TEST_MESSAGE": {
+      "name": "Send Test Message",
+      "id": "0x05",
+      "description": "Send a test message",
+      "payload_size": 0
+    },
+    "SEND_NEW_TX": {
+      "name": "Send New TX",
+      "id": "0x06",
+      "description": "Send a new TX",
+      "payload_size": -1 // variable size
     }
   },
   "ERROR_IDS": {

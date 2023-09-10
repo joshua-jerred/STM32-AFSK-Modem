@@ -66,11 +66,20 @@ class Comms:
         self._sendAndReceiveAck(test_packet)
         return True
 
-    def setAar(self, aar_value) -> bool:
-        assert(aar_value >= 0 and aar_value <= 5000)
-        print("MESSAGE ID", int(MessageId.SET_AAR))
-        set_aar_packet = Packet()
-        aar_msb = (aar_value >> 8) & 0xFF
-        aar_lsb = aar_value & 0xFF
-        set_aar_packet.generatePacket(int(MessageId.SET_AAR), [aar_msb, aar_lsb])
-        return self._sendAndReceiveAck(set_aar_packet)
+    def setBaudRate(self, baud_rate) -> bool:
+        assert(baud_rate in [50, 300, 1200])
+        set_baud_rate_packet = Packet()
+        baud_rate_msb = (baud_rate >> 8) & 0xFF
+        baud_rate_lsb = baud_rate & 0xFF
+        set_baud_rate_packet.generatePacket(int(MessageId.SET_BAUD_RATE), [baud_rate_msb, baud_rate_lsb])
+        return self._sendAndReceiveAck(set_baud_rate_packet)
+
+    def sendTestMessage(self) -> bool:
+        test_packet = Packet()
+        test_packet.generatePacket(int(MessageId.SEND_TEST_MESSAGE), [])
+        return self._sendAndReceiveAck(test_packet)
+
+    def sendNewTx(self, text) -> bool:
+        new_tx_packet = Packet()
+        new_tx_packet.generatePacket(int(MessageId.SEND_NEW_TX), [ord(c) for c in text])
+        return self._sendAndReceiveAck(new_tx_packet)

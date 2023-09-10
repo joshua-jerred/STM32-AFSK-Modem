@@ -41,7 +41,7 @@ def getOptions(prompt, options):
         return options[ret-1]
 
 while True:
-    options = ['Handshake', 'Set AAR', 'Quit']
+    options = ['Handshake', 'Set Baud Rate', 'Send Test Message', 'Send New Tx', 'Enter Text Mode', 'Quit']
     selection = getOptions('Select an option:', options)
     print()
     if selection == 'Quit':
@@ -51,10 +51,31 @@ while True:
             print('Handshake successful')
         else:
             print('Handshake failed')
-    elif selection == 'Set AAR':
-        new_val = getInt("Enter new AAR value for the timer 1-2000:", 1, 2000)
-        if comms.setAar(new_val):
-            print('New TX successful')
+    elif selection == 'Set Baud Rate':
+        baud_rate = getOptions('Select a baud rate:', ['50', '300', '1200'])
+        if comms.setBaudRate(int(baud_rate)):
+            print('Baud Rate Set')
         else:
-            print('New TX failed')
+            print('Failed to set baud rate')
+    elif selection == 'Send Test Message':
+        if comms.sendTestMessage():
+            print('Test message sent')
+        else:
+            print('Failed to send test message')
+    elif selection == 'Send New Tx':
+        text = input('Enter text to send: ')
+        if comms.sendNewTx(text):
+            print('Message sent')
+        else:
+            print('Failed to send message')
+    elif selection == 'Enter Text Mode':
+        while True:
+            text = input('Enter text to send, q to exit text mode: ')
+            if text == 'q':
+                break
+            text += '\n'
+            if comms.sendNewTx(text):
+                print('Message sent')
+            else:
+                print('Failed to send message')
     print()
