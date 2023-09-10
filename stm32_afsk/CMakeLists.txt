@@ -18,6 +18,7 @@ add_subdirectory(lib/FreeRTOS)
 # Add the executable
 add_executable(afsk_link.elf
   src/main.cpp
+  src/modem/modem.cpp
   src/hardware/hardware_init.cpp
   src/external_comms/external_comms.cpp
 

@@ -9,6 +9,8 @@
 #include "hardware_init.hpp"
 #include "assert_handler.h"
 
+#include "stm32f429xx.h"
+
 static void configureSystemClock() {
   /* Configure the system clock */
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
@@ -27,9 +29,9 @@ static void configureSystemClock() {
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 168;
+  RCC_OscInitStruct.PLL.PLLN = 180;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 7;
+  RCC_OscInitStruct.PLL.PLLQ = 8;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
     assertHandler();
   }
@@ -181,14 +183,12 @@ void configureDAC() {
 void configureTimer() {
   TIM_MasterConfigTypeDef sMasterConfig = {0};
 
-  /* USER CODE BEGIN TIM6_Init 1 */
-
-  /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
   htim6.Init.Prescaler = 0;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 159;
-  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim6.Init.Period = 585;
+  htim6.Init.AutoReloadPreload =
+      TIM_AUTORELOAD_PRELOAD_ENABLE; // NEED THIS TO BE ABLE TO CHANGE PERIOD
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK) {
     assertHandler();
   }

@@ -18,8 +18,8 @@ data = None
 with open(INPUT_JSONC_FILE) as f:
     data = json.load(f)
 
-packet_ids_json = data['PACKET_IDS']
-packet_ids_enum = Enum("PacketId", enum_class=True, enum_type='uint8_t')
+packet_ids_json = data['MESSAGE_IDS']
+packet_ids_enum = Enum("MessageId", enum_class=True, enum_type='uint8_t')
 for token_name in packet_ids_json:
     packet_ids_enum.addToken(token_name, token_value=packet_ids_json[token_name]['id'], token_comment=packet_ids_json[token_name]['description'])
 

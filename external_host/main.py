@@ -41,7 +41,7 @@ def getOptions(prompt, options):
         return options[ret-1]
 
 while True:
-    options = ['Handshake', 'New TX', 'Quit']
+    options = ['Handshake', 'Set AAR', 'Quit']
     selection = getOptions('Select an option:', options)
     print()
     if selection == 'Quit':
@@ -51,8 +51,9 @@ while True:
             print('Handshake successful')
         else:
             print('Handshake failed')
-    elif selection == 'New TX':
-        if comms.newTx([0x01, 0x02, 0x03, 0x04, 0x05]):
+    elif selection == 'Set AAR':
+        new_val = getInt("Enter new AAR value for the timer 1-2000:", 1, 2000)
+        if comms.setAar(new_val):
             print('New TX successful')
         else:
             print('New TX failed')

@@ -1,0 +1,14 @@
+\[
+  F_{trigger} = \frac{C_{APB1}}{(PSC+1)*(ARR+1)}
+\]
+where:
+\begin{itemize}
+  \item[$C_{APB1}$] is the clock frequency of the APB1 bus
+  \item[$PSC$] is the prescaler value
+  \item[$ARR$] is the auto-reload value
+  \item[$F_{trigger}$] is the frequency of the trigger
+\end{itemize}
+
+\[
+  F_{output} = \frac{F_{trigger}}{N_{samples}}
+\]

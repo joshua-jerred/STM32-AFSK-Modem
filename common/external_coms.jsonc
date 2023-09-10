@@ -1,5 +1,5 @@
 {
-  "PACKET_IDS": {
+  "MESSAGE_IDS": {
     "UNKNOWN": {
       "name": "Unknown",
       "id": "0x00",
@@ -16,7 +16,7 @@
       "name": "Error",
       "id": "0x02",
       "description": "Error Packet",
-      "payload_size": 2
+      "payload_size": 1
     },
     "ACK": {
       "name": "Acknowledge",
@@ -24,17 +24,11 @@
       "description": "Acknowledge Packet",
       "payload_size": 1
     },
-    "INC": {
-      "name": "IncreaseFrequency",
+    "SET_AAR": {
+      "name": "SetTimerAAR",
       "id": "0x04",
-      "description": "Increase Frequency Packet",
-      "payload_size": 0
-    },
-    "DEC": {
-      "name": "DecreaseFrequency",
-      "id": "0x05",
-      "description": "Decrease Frequency Packet",
-      "payload_size": 0
+      "description": "Set the AAR of the timer",
+      "payload_size": 2
     }
   },
   "ERROR_IDS": {
@@ -52,6 +46,36 @@
       "name": "Invalid Packet ID",
       "id": "0x02",
       "description": "The ID of the packet was invalid"
+    },
+    "INVALID_PAYLOAD_SIZE": {
+      "name": "Payload Size is Invalid",
+      "id": "0x03",
+      "description": ""
+    },
+    "INVALID_CRC": {
+      "name": "CRC Is Invalid",
+      "id": "0x04",
+      "description": ""
+    },
+    "INVALID_END_FLAG": {
+      "name": "Invalid End Flag",
+      "id": "0x05",
+      "description": ""
+    },
+    "MESSAGE_TIMED_OUT": {
+      "name": "Message Timed Out",
+      "id": "0x06",
+      "description": ""
+    },
+    "BUSY": {
+      "name": "Target Is Busy",
+      "id": "0x07",
+      "description": ""
+    },
+    "INVALID_PAYLOAD_FOR_MESSAGE_TYPE":{
+      "name": "Payload Size Invalid for Message Type",
+      "id": "0x08",
+      "description": ""
     }
   }
 }

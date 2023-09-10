@@ -4,6 +4,7 @@ import time
 import logging
 log = logging.getLogger("external_host")
 
+from external_comms_types import MessageId, ErrorId
 from checksum import generateCrc16Ccitt
 from packet import Packet, MIN_PACKET_LENGTH
 
@@ -54,6 +55,10 @@ class Comms:
             log.error(f'Expected ACK packet, received {str(ret_packet)}')
             return False
         acked_packet_id = ret_packet.getPayload()[0]
+        if acked_packet_id != packet.getPacketId():
+            log.error(f'Expected ACK for packet ID {packet.getPacketId()}, received ACK for {acked_packet_id}')
+            return False
+        return True
 
     def handshake(self):
         test_packet = Packet()
@@ -61,8 +66,11 @@ class Comms:
         self._sendAndReceiveAck(test_packet)
         return True
 
-    def newTx(self, payload:list[int]):
-        ret = self._sendAndReceive(MESSAGE_ID_NEW_TX, payload, 8)
-        if ret[0] != MESSAGE_ID_ACK:
-            return False
-        return True
+    def setAar(self, aar_value) -> bool:
+        assert(aar_value >= 0 and aar_value <= 5000)
+        print("MESSAGE ID", int(MessageId.SET_AAR))
+        set_aar_packet = Packet()
+        aar_msb = (aar_value >> 8) & 0xFF
+        aar_lsb = aar_value & 0xFF
+        set_aar_packet.generatePacket(int(MessageId.SET_AAR), [aar_msb, aar_lsb])
+        return self._sendAndReceiveAck(set_aar_packet)

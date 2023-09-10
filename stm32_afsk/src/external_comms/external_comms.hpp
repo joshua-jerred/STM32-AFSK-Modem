@@ -20,13 +20,14 @@
 constexpr uint16_t kUartMaxPacketSize = 512 + 7;
 
 #include "external_comms_config.hpp"
-#include "message_ids.hpp"
+#include "external_comms_types.hpp"
+#include "modem/modem.hpp"
 
 class ExternalComms {
 public:
   ExternalComms(bst::Uart<kExternalUartRxBufferSize> &hardware_uart,
-                bst::Gpio &status_led, TIM_HandleTypeDef &htim6)
-      : uart_(hardware_uart), status_led_(status_led), htim6_(htim6) {
+                bst::Gpio &status_led, Modem &modem)
+      : uart_(hardware_uart), status_led_(status_led), modem_(modem) {
   }
 
   void process();
@@ -38,10 +39,9 @@ private:
   /**
    * @brief Send an error message and clear the RX buffer.
    *
-   * @param received_id - The message ID that caused the error
    * @param error_id - The error ID
    */
-  void sendError(MessageId received_id, ErrorId error_id);
+  void sendError(ErrorId error_id);
 
   /**
    * @brief Send an ACK message and clear the RX buffer.
@@ -49,8 +49,8 @@ private:
    */
   void sendAck(MessageId id_to_ack);
 
-  void
-  processNewTxPacket(etl::array<uint8_t, kExternalUartRxBufferSize> &rx_buffer);
+  void processSetAarMessage(
+      etl::array<uint8_t, kExternalUartRxBufferSize> &rx_buffer);
 
   bst::Stopwatch message_rx_timeout_;
 
@@ -59,7 +59,7 @@ private:
 
   etl::vector<uint8_t, kUartMaxPacketSize> tx_buffer_;
 
-  TIM_HandleTypeDef &htim6_;
+  Modem &modem_;
 };
 
 #endif /* EXTERNAL_COMMS_HPP_ */

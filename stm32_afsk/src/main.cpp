@@ -17,7 +17,7 @@
 #include "assert_handler.h"
 #include "external_comms/external_comms.hpp"
 #include "hardware/hardware_init.hpp"
-#include "wavedriver/waveform.hpp"
+#include "modem/modem.hpp"
 
 typedef StaticTask_t osStaticThreadDef_t;
 
@@ -36,8 +36,9 @@ bst::Uart<kExternalUartRxBufferSize> g_external_uart(&huart3, &hdma_usart3_rx,
 static bst::Gpio g_primary_status_led(GPIOB, GPIO_PIN_0);
 static bst::Gpio g_external_comms_status_led(GPIOB, GPIO_PIN_7);
 
+static Modem g_modem(g_primary_status_led, hdac, htim6, hdma_dac1);
 static ExternalComms g_external_comms(g_external_uart,
-                                      g_external_comms_status_led, htim6);
+                                      g_external_comms_status_led, g_modem);
 
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -60,20 +61,17 @@ const osThreadAttr_t externalComms_attributes = {
 };
 
 void defaultTask(void *arHAL_DAC_SetValuegument) {
-  HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, &SineWaveForm.at(0),
-                    SineWaveForm.size(), DAC_ALIGN_12B_R);
-  HAL_TIM_Base_Start(&htim6);
-
-  for (;;) {
-    g_primary_status_led.toggle();
-    osDelay(200);
+  g_modem.start();
+  while (true) {
+    g_modem.update();
+    osDelay(1000);
   }
 }
 
 void externalCommsTask(void *argument) {
   while (true) {
     g_external_comms.process();
-    osDelay(1);
+    osDelay(5);
   }
 }
 

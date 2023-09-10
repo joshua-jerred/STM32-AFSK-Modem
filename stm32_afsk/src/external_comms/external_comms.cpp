@@ -16,6 +16,11 @@
 
 constexpr uint8_t kPacketFlag = 0xA5;
 
+struct Message {
+  MessageId id;
+  etl::span<const uint8_t> payload;
+};
+
 void calculateCrc16(const etl::span<const uint8_t> &data_range, uint16_t &crc) {
   crc = 0xFFFF; // Initial value
   for (uint8_t byte : data_range) {
@@ -43,12 +48,8 @@ void ExternalComms::process() {
       .resume(); // Starts if not already running, does not reset the timer
 
   if (message_rx_timeout_.getElapsedTicks() > kMessageProcessingTimeoutMs) {
-    MessageId error_response_message_id = MessageId::UNKNOWN;
     // A packet ID may have been received
-    if (num_bytes_received >= 2) {
-      error_response_message_id = getMessageIdFromValue(uart_.receive().at(1));
-    }
-    sendError(error_response_message_id, ErrorId::MESSAGE_TIMED_OUT);
+    sendError(ErrorId::MESSAGE_TIMED_OUT);
   }
 
   // Minimum packet size is 7 bytes
@@ -59,7 +60,7 @@ void ExternalComms::process() {
   auto &rx_buffer = uart_.receive();
   // Check for the start of a packet
   if (rx_buffer.at(0) != kPacketFlag) {
-    sendError(MessageId::UNKNOWN, ErrorId::INVALID_START_FLAG);
+    sendError(ErrorId::INVALID_START_FLAG);
     return;
   }
 
@@ -67,8 +68,7 @@ void ExternalComms::process() {
 
   uint16_t payload_size = rx_buffer.at(2) << 8 | rx_buffer.at(3);
   if (payload_size > kExternalUartPayloadMaxSize) {
-    sendError(getMessageIdFromValue(rx_buffer.at(1)),
-              ErrorId::INVALID_PAYLOAD_SIZE);
+    sendError(ErrorId::INVALID_PAYLOAD_SIZE);
     return;
   }
 
@@ -85,31 +85,34 @@ void ExternalComms::process() {
   uint16_t calculated_crc = 0;
   calculateCrc16(crc_range, calculated_crc);
   if (received_crc != calculated_crc) {
-    sendError(getMessageIdFromValue(rx_buffer.at(1)), ErrorId::INVALID_CRC);
+    sendError(ErrorId::INVALID_CRC);
     return;
   }
 
   // Check for the end of packet flag
   if (rx_buffer.at(payload_size + 6) != kPacketFlag) {
-    sendError(getMessageIdFromValue(rx_buffer.at(1)),
-              ErrorId::INVALID_END_FLAG);
+    sendError(ErrorId::INVALID_END_FLAG);
     return;
   }
 
   // Process the packet
   switch (packet_id) {
-  case bst::to_underlying(MessageId::TEST):
+  case bst::to_underlying(MessageId::HANDSHAKE):
     if (payload_size != 0) {
-      sendError(MessageId::TEST, ErrorId::INVALID_PAYLOAD_FOR_MESSAGE_TYPE);
+      sendError(ErrorId::INVALID_PAYLOAD_FOR_MESSAGE_TYPE);
       return;
     }
-    sendAck(MessageId::TEST);
+    sendAck(MessageId::HANDSHAKE);
     break;
-  case bst::to_underlying(MessageId::NEW_TX):
-    processNewTxPacket(rx_buffer);
+  case bst::to_underlying(MessageId::SET_AAR):
+    if (payload_size != 2) {
+      sendError(ErrorId::INVALID_PAYLOAD_FOR_MESSAGE_TYPE);
+      return;
+    }
+    processSetAarMessage(rx_buffer);
     break;
   default:
-    sendError(MessageId::UNKNOWN, ErrorId::INVALID_PACKET_ID);
+    sendError(ErrorId::INVALID_PACKET_ID);
     return;
   };
 
@@ -146,7 +149,7 @@ void ExternalComms::sendPacket(MessageId message_id,
   uart_.send(tx_buffer_);
 }
 
-void ExternalComms::sendError(MessageId received_message_id, ErrorId error_id) {
+void ExternalComms::sendError(ErrorId error_id) {
 #if COMMS_DEBUG
   uint8_t error_id_byte = '0' + bst::to_underlying(error_id);
   etl::array<uint8_t, 11> payload = {bst::to_underlying(received_message_id),
@@ -161,8 +164,7 @@ void ExternalComms::sendError(MessageId received_message_id, ErrorId error_id) {
                                      error_id_byte,
                                      '\n'};
 #else
-  etl::array<uint8_t, 2> payload = {bst::to_underlying(received_message_id),
-                                    bst::to_underlying(error_id)};
+  etl::array<uint8_t, 1> payload = {bst::to_underlying(error_id)};
 #endif
   sendPacket(MessageId::ERROR, payload);
   uart_.clearBuffer(); // Clear the RX buffer
@@ -173,11 +175,8 @@ void ExternalComms::sendAck(MessageId message_to_ack) {
   sendPacket(MessageId::ACK, payload);
 }
 
-void ExternalComms::processNewTxPacket(
+void ExternalComms::processSetAarMessage(
     etl::array<uint8_t, kExternalUartRxBufferSize> &rx_buffer) {
-  etl::array<uint8_t, 7> packet = {
-      kPacketFlag, bst::to_underlying(MessageId::ACK), 0x00, 0x00, 'T', 'X',
-      kPacketFlag};
-  uart_.send(packet);
-  uart_.clearBuffer();
+  volatile uint16_t aar = rx_buffer.at(4) << 8 | rx_buffer.at(5);
+  sendAck(MessageId::SET_AAR);
 }
