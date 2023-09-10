@@ -9,6 +9,7 @@
 #ifndef HARDWARE_CONFIGURATION_HPP_
 #define HARDWARE_CONFIGURATION_HPP_
 
+#include "assert_handler.h"
 #include "macros.h"
 
 #include "external_comms/external_comms_config.hpp"
@@ -16,6 +17,7 @@
 #include <Bst/Embd/uart.hpp>
 
 extern TIM_HandleTypeDef htim6;
+extern TIM_HandleTypeDef htim13;
 extern ADC_HandleTypeDef hadc1;
 extern DMA_HandleTypeDef hdma_adc1;
 extern DAC_HandleTypeDef hdac;

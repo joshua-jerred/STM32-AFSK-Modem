@@ -104,12 +104,18 @@ void ExternalComms::process() {
     }
     sendAck(MessageId::HANDSHAKE);
     break;
-  case bst::to_underlying(MessageId::SET_AAR):
+  case bst::to_underlying(MessageId::SET_BAUD_RATE):
     if (payload_size != 2) {
       sendError(ErrorId::INVALID_PAYLOAD_FOR_MESSAGE_TYPE);
       return;
     }
-    processSetAarMessage(rx_buffer);
+    processSetBaudRateMessage(rx_buffer);
+    break;
+  case bst::to_underlying(MessageId::SEND_TEST_MESSAGE):
+    sendTestMessage();
+    break;
+  case bst::to_underlying(MessageId::SEND_NEW_TX):
+    transmitNewAfskMessage(rx_buffer);
     break;
   default:
     sendError(ErrorId::INVALID_PACKET_ID);
@@ -175,8 +181,61 @@ void ExternalComms::sendAck(MessageId message_to_ack) {
   sendPacket(MessageId::ACK, payload);
 }
 
-void ExternalComms::processSetAarMessage(
+void ExternalComms::processSetBaudRateMessage(
     etl::array<uint8_t, kExternalUartRxBufferSize> &rx_buffer) {
-  volatile uint16_t aar = rx_buffer.at(4) << 8 | rx_buffer.at(5);
-  sendAck(MessageId::SET_AAR);
+  volatile uint16_t baudRate = rx_buffer.at(4) << 8 | rx_buffer.at(5);
+  bool res = false;
+  switch (baudRate) {
+  case 50:
+    res = modem_.setBaudRate(Modem::BaudRate::k50);
+    break;
+  case 300:
+    res = modem_.setBaudRate(Modem::BaudRate::k300);
+    break;
+  case 1200:
+    res = modem_.setBaudRate(Modem::BaudRate::k1200);
+    break;
+  default:
+    sendError(ErrorId::INVALID_PAYLOAD_FOR_MESSAGE_TYPE);
+    return;
+  }
+  if (!res) {
+    sendError(ErrorId::BUSY);
+    return;
+  }
+  sendAck(MessageId::SET_BAUD_RATE);
+}
+
+void ExternalComms::sendTestMessage() {
+  static etl::array<uint8_t, 13> test_message = {
+      'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\n'};
+  bool res = modem_.encodeNewAfskPacket(test_message);
+  if (!res) {
+    sendError(ErrorId::BUSY);
+    return;
+  }
+  sendAck(MessageId::SEND_TEST_MESSAGE);
+}
+
+void ExternalComms::transmitNewAfskMessage(
+    etl::array<uint8_t, kExternalUartRxBufferSize> &rx_buffer) {
+  volatile uint16_t newTxSize = rx_buffer.at(2) << 8 | rx_buffer.at(3);
+
+  if (modem_.isBusy()) {
+    sendError(ErrorId::BUSY);
+    return;
+  }
+  static etl::array<uint8_t, 256> newTxData = {0};
+
+  for (uint16_t i = 0; i < newTxSize; i++) {
+    newTxData.at(i) = rx_buffer.at(i + 4);
+  }
+
+  etl::span<const uint8_t> newTxDataSpan{newTxData.begin(), newTxSize};
+  bool res = modem_.encodeNewAfskPacket(newTxDataSpan);
+  if (!res) {
+    sendError(ErrorId::BUSY);
+    return;
+  }
+  sendAck(MessageId::SEND_NEW_TX);
 }

@@ -49,7 +49,12 @@ private:
    */
   void sendAck(MessageId id_to_ack);
 
-  void processSetAarMessage(
+  void processSetBaudRateMessage(
+      etl::array<uint8_t, kExternalUartRxBufferSize> &rx_buffer);
+
+  void sendTestMessage();
+
+  void transmitNewAfskMessage(
       etl::array<uint8_t, kExternalUartRxBufferSize> &rx_buffer);
 
   bst::Stopwatch message_rx_timeout_;

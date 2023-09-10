@@ -13,6 +13,11 @@ if [ $BUILD_ELF = "1" ]; then
     # Build ELF
     cmake -Bbuild/arm_none_eabi_gcc -DCMAKE_TOOLCHAIN_FILE=cmake/arm_none_eabi_gcc.cmake -DCMAKE_BUILD_TYPE=Debug
     cmake --build build/arm_none_eabi_gcc
+    # exit if build failed
+    if [ $? -ne 0 ]; then
+        echo "Build failed"
+        exit 1
+    fi
 fi
 
 # Convert ELF to BIN
