@@ -39,7 +39,8 @@ static bst::Gpio g_primary_status_led(GPIOB, GPIO_PIN_0);
 static bst::Gpio g_external_comms_status_led(GPIOB, GPIO_PIN_7);
 static bst::Gpio g_debug_out_pin(GPIOB, GPIO_PIN_11);
 
-static Modem g_modem(g_primary_status_led, hdac, htim6, hdma_dac1, htim13);
+static Modem g_modem(g_primary_status_led, hdac, htim6, hdma_dac1, htim13,
+                     hadc1);
 static ExternalComms g_external_comms(g_external_uart,
                                       g_external_comms_status_led, g_modem);
 

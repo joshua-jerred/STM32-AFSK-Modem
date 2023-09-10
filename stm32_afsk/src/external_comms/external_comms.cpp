@@ -117,6 +117,9 @@ void ExternalComms::process() {
   case bst::to_underlying(MessageId::SEND_NEW_TX):
     transmitNewAfskMessage(rx_buffer);
     break;
+  case bst::to_underlying(MessageId::ADC_VALUE):
+    sendAdcValue();
+    break;
   default:
     sendError(ErrorId::INVALID_PACKET_ID);
     return;
@@ -238,4 +241,11 @@ void ExternalComms::transmitNewAfskMessage(
     return;
   }
   sendAck(MessageId::SEND_NEW_TX);
+}
+
+void ExternalComms::sendAdcValue() {
+  uint16_t adc_value = modem_.getAdcValue();
+  etl::array<uint8_t, 2> payload = {static_cast<uint8_t>(adc_value >> 8),
+                                    static_cast<uint8_t>(adc_value & 0xFF)};
+  sendPacket(MessageId::ADC_VALUE, payload);
 }

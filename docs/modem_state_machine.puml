@@ -1,16 +1,22 @@
 @startuml
 
-state "Transmitting" as Transmitting
-state "Receiving" as Receiving
-
 state "Idle" as Idle
-  Idle: - Checks for UART activity
-  Idle: - Checks for hardware indication of packet reception
+state "Transmit Mode" as Transmitting {
+  state "Starting Tx" as StartingTx
+  state "Tx Preamble" as TxPreamble
+  state "Tx Data" as TxData
+
+  [*] --> StartingTx
+  StartingTx --> TxPreamble
+  StartingTx --> TxData : No preamble configured
+  TxPreamble --> TxData
+  TxData --> [*]
+
+}
+state "Receiving" as Receiving 
 
 [*] --> Idle
 Idle --> Transmitting : Commanded to send a packet via UART
-Idle --> Receiving : Hardware indicates possible reception
-Transmitting --> Idle : Packet sent
-Receiving --> Idle : Packet received/timeout
+Idle --> Receiving : Commanded to enter receive mode
 
 @enduml

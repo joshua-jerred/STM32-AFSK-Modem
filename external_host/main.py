@@ -41,11 +41,13 @@ def getOptions(prompt, options):
         return options[ret-1]
 
 while True:
-    options = ['Handshake', 'Set Baud Rate', 'Send Test Message', 'Send New Tx', 'Enter Text Mode', 'Quit']
+    options = ['Handshake', 'Set Baud Rate', 'Send Test Message', 'Send New Tx', 'Enter Text Mode', 'Get ADC Value', 'Flush', 'Quit']
     selection = getOptions('Select an option:', options)
     print()
     if selection == 'Quit':
         break
+    elif selection == 'Flush':
+        comms.flush()
     elif selection == 'Handshake':
         if comms.handshake():
             print('Handshake successful')
@@ -78,4 +80,10 @@ while True:
                 print('Message sent')
             else:
                 print('Failed to send message')
+    elif selection == 'Get ADC Value':
+        adc_value = comms.getAdcValue()
+        if adc_value is False:
+            print('Failed to get ADC value')
+        else:
+            print(f'ADC value: {adc_value}')
     print()

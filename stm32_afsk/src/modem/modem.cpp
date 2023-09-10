@@ -21,7 +21,7 @@ bool Modem::encodeNewAfskPacket(etl::span<const uint8_t> data) {
     return false;
   }
 
-  state_ = State::kStartingTx;
+  state_ = State::kTxStarting;
   tx_data_ = data;
   preamble_counter_ = 0;
   data_byte_counter_ = 0;
@@ -32,13 +32,8 @@ bool Modem::encodeNewAfskPacket(etl::span<const uint8_t> data) {
   return true;
 }
 
-bool Modem::setBaudRate(BaudRate baud_rate) {
-  if (state_ != State::kIdle) {
-    return false;
-  }
-
-  baud_rate_ = baud_rate;
-  return true;
+uint16_t Modem::getAdcValue() {
+  return 2500;
 }
 
 void Modem::startWaveform() {
@@ -86,26 +81,26 @@ void Modem::baudPulse() {
   if (state_ == State::kIdle) {
     HAL_NVIC_DisableIRQ(TIM8_UP_TIM13_IRQn);
     return;
-  } else if (state_ == State::kStartingTx) {
+  } else if (state_ == State::kTxStarting) {
     startWaveform();
     if (preamble_length_ == 0) {
-      state_ = State::kTransmittingData;
+      state_ = State::kTxData;
     } else {
-      state_ = State::kTransmittingPreamble;
+      state_ = State::kTxPreamble;
     }
   }
 
-  if (state_ == State::kTransmittingPreamble) {
+  if (state_ == State::kTxPreamble) {
     setFreqMark();
     if (preamble_counter_ < preamble_length_) {
       preamble_counter_++;
       return;
     } else {
-      state_ = State::kTransmittingData;
+      state_ = State::kTxData;
     }
   }
 
-  if (state_ == State::kTransmittingData) {
+  if (state_ == State::kTxData) {
     if (bit_counter_ == 0) { // start bit
       setFreqSpace();
       bit_counter_++;

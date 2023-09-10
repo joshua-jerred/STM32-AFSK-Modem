@@ -41,6 +41,12 @@
       "id": "0x06",
       "description": "Send a new TX",
       "payload_size": -1 // variable size
+    },
+    "ADC_VALUE": {
+      "name": "Get ADC Value",
+      "id": "0x07",
+      "description": "Returns the current ADC value. (0 payload for request, 2 payload for response)",
+      "payload_size": -1
     }
   },
   "ERROR_IDS": {

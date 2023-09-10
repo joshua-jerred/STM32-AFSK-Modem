@@ -15,7 +15,6 @@ PACKET_ID_HANDSHAKE = 0x01
 PACKET_ID_ACK = 0x03
 ACK_PACKET_SIZE = 8
 
-PACKET_ID_NEW_TX = 0x04
 
 class Comms:
     def __init__(self, serial_port, baud_rate, timeout_sec=1):
@@ -31,6 +30,10 @@ class Comms:
     def disconnect(self):
         log.debug('Disconnecting from serial port')
         self.serial.close()
+
+    def flush(self):
+        log.debug('Flushing serial port')
+        self.serial.reset_input_buffer()
 
     def __sendPacket(self, packet:Packet):
         log.debug(f'Sending packet {str(packet)}')
@@ -63,8 +66,7 @@ class Comms:
     def handshake(self):
         test_packet = Packet()
         test_packet.generatePacket(PACKET_ID_HANDSHAKE, [])
-        self._sendAndReceiveAck(test_packet)
-        return True
+        return self._sendAndReceiveAck(test_packet)
 
     def setBaudRate(self, baud_rate) -> bool:
         assert(baud_rate in [50, 300, 1200])
@@ -83,3 +85,20 @@ class Comms:
         new_tx_packet = Packet()
         new_tx_packet.generatePacket(int(MessageId.SEND_NEW_TX), [ord(c) for c in text])
         return self._sendAndReceiveAck(new_tx_packet)
+
+    def getAdcValue(self) -> int:
+        get_adc_value_packet = Packet()
+        get_adc_value_packet.generatePacket(int(MessageId.ADC_VALUE), [])
+        self.__sendPacket(get_adc_value_packet)
+        ret_packet = self.__receivePacket(9)
+        if ret_packet is None:
+            log.error('Failed to receive ACK packet')
+            return False
+        if ret_packet.getPacketId() != MessageId.ADC_VALUE:
+            log.error(f'Expected ACK packet, received {str(ret_packet)}')
+            return False
+        if ret_packet.getSizeOfPayload() != 2:
+            log.error(f'Expected ACK packet with payload size 2, received {str(ret_packet)}')
+            return False
+        adc_value = ret_packet.getPayload()[0] << 8 | ret_packet.getPayload()[1]
+        return adc_value

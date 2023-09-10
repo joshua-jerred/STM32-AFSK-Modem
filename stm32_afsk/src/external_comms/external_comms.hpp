@@ -57,6 +57,8 @@ private:
   void transmitNewAfskMessage(
       etl::array<uint8_t, kExternalUartRxBufferSize> &rx_buffer);
 
+  void sendAdcValue();
+
   bst::Stopwatch message_rx_timeout_;
 
   bst::Uart<kExternalUartRxBufferSize> &uart_;
