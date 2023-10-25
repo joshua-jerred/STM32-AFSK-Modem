@@ -1,6 +1,6 @@
 APB1_CLK    = 90
-PSC         = 0
-ARR         = 319 # 585 = 1200, 319 = 2200
+PSC         = 1
+ARR         = 37499 # 585 = 1200, 319 = 2200
 NUM_SAMPLES = 128
 
 trigger_freq = APB1_CLK / ((PSC+1)*(ARR+1))

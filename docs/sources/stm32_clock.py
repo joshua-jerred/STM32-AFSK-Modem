@@ -7,7 +7,7 @@ import getopt, sys, itertools
 
 bit="16"
 TIM_BASE_CLOCK=90000000
-TARGET_F = 2400
+TARGET_F = 1200
 error=0.0
 max_results=-1
 DUTY=100.0

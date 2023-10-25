@@ -2,7 +2,7 @@
 \usepackage{graphicx}
 \usepackage{amsmath}
 
-\title{Software Defined Modem Using Modern Micro-Controllers}
+\title{A Software Defined Modem Using Commodity Micro-Controllers}
 \author{Joshua Jerred}
 \date{\today}
 
@@ -14,6 +14,8 @@
 Modern embedded hardware is far more capable than it has been in the past. Newer devices, such as the STM32, have powerful ARM cores matched up with other hardware inside of small single chip MCU packages. With peripherals like ADCs and DACs, along side DMA, audio can be cleanly generated in real time. This can be used to generate modulated data streams, with one common piece of hardware.
 
 \section{Background}
+
+
 
 \section{Hardware}
 The idea of this project is that a generic microcontroller (MCU) is capable of acting as a software defined modem. Given this, the hardware will be kept simple. A single MCU will be used to act as the software modem. The modem will be connected to an external host/client, this client will control the modem. The modem has a single audio output and audio input, this can connected to various types of physical mediums to transfer the data that is modulated in the audio from one modem to another.
@@ -35,12 +37,18 @@ When looking for the appropriate MCU for this project there were a few requireme
   \item[Cost] There are many devices that are capable of completing the task, but the cost of the device is a major consideration. The device should be as cheap and as generic as possible to allow for easy replication of this project on other hardware.
 \end{itemize}
 
+The STM32F4 series of MCUs are a good fit for this project as they are fast, contain all of the required components, and they are cheap. These are fairly generic MCUs that are available for \$.
 
 \section{Software Implementation}
+\subsection{AFSK Introduction}
+AFSK, or Audio-Frequency-Shift-Keying, is a method of encoding bits into a modulated audio signal. This is done by modulating a carrier wave between two frequencies, where each distinct frequency represents a symbol. For this Implementation there will be two symbols, 1 and 0, at 1200 Hz and 2200 Hz respectively. The rate at which symbols change can be variable, but 1200 baud was chosen for this project. This is the same method used by the Bell 202 modem.
+
+EXAMPLE IMAGE OF AFSK
+
 \subsection{Waveform Generation}
 Any method of audio modulation requires that a waveform be generated. This waveform is then modified to represent unique symbols. Therefore, a MCU must be able to generate a simple sine wave. With AFSK being the primary modulation mode for this project, a 1200 Hz wave is generated.
 
-The goal was to have the MCU generate a non-changing sine wave without a large impact to CPU usage. Using the DAC, alongside DMA, and a hardware timer. The DAC will output a constant voltage given a constant 12-bit value. Utilizing an array of sine wave values, the DMA will transfer the values to the DAC at a constant rate set by a hardware timer. A single cycle of the sine wave is represented by 128 12-bit values. Given this information, and a hardware clock, the timer can be configured to trigger at a rate that will generate a sine wave at a given rate.
+The goal was to have the MCU generate a constant sine wave without a large impact to CPU usage. Using the DAC, alongside DMA, and a hardware timer. The DAC will output a constant voltage given a constant 12-bit value. Utilizing an array of sine wave values, the DMA will transfer the values to the DAC at a constant rate set by a hardware timer. A single cycle of the sine wave is represented by 128 12-bit values. Given this information, and a hardware clock, the timer can be configured to trigger at a rate that will generate a sine wave at a given rate. For example, the timer configuration for a 1200hz sine wave is as follows:
 
 \[
   F_{trigger} = \frac{C_{APB1}}{(PSC+1)*(ARR+1)}
@@ -57,8 +65,19 @@ where:
   F_{output} = \frac{F_{trigger}}{N_{samples}}
 \]
 
-\subsection{Data Modulation}
+IMAGE OF OUTPUT
 
+This method provides a constant sine wave output with no CPU intervention past configuring the DAC on startup, and configuring/starting the timer. After this, the CPU is free to do other tasks.
+
+\subsection{Modulation}
+
+Modulation is the process of converting raw data, bits, into a modulated audio signal. This is done by taking a raw data stream, and generating the proper audio samples. The modem will look at each bit in order, and change the audio output frequency depending on the value of the bit. Provided the implementation of the waveform generation, the act of changing frequencies only requires changing the hard clock configuration, specifically the ARR and PSC values in software. For modulation, another hardware timer was used. This is configured to trigger a software interrupt at the baud rate of the modem. This interrupt will then read the next bit in the data stream, and set the frequency of the output waveform accordingly. As the baud rate is 1200, this interrupt will be triggered at 1200 Hz.
+
+By utilizing the hardware built into the MCU, modulation can be done with minimal CPU intervention allowing the single-core MCU to perform other tasks, like external communication, while modulating audio.
+
+IMAGE OF MODULATION - create a timeline graphic that shows the hardware interrupts
+
+\subsection{Demodulation}
 
 \include{audio_waveform_generation}
 
