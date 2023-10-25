@@ -11,13 +11,23 @@
 
 \section{Introduction}
 
-Modern embedded hardware is far more capable than it has been in the past. Newer devices, such as the STM32, have powerful ARM cores matched up with other hardware inside of small single chip MCU packages. With peripherals like ADCs and DACs, along side DMA, audio can be cleanly generated in real time. This can be used to generate modulated data streams, with one common piece of hardware.
+Commodity micro-controllers (MCUs), are capable of completing a wide variety of tasks thanks to their integrated hardware. This project aims to utilize the hardware built into a generic MCU to create a software defined modem. This modem will be capable of modulating and demodulating audio signals, agnostic of the physical medium and specific modulation mode. This will show that a commodity MCU  Although this project will focus on an older modulation mode, AFSK, the goal is to show that a modern MCU is powerful enough, given it's rich feature set, to fully implement a software defined modem without the need for any additional hardware.
 
 \section{Background}
 
+When it comes to specifically using an MCU for this purpose, there are existing implementation. An article posted in ARRL QST in october of 1998 described using a PIC MCU to create AX.25 (describe ax.25) frames audio\cite{hansen_ax25}. These frames were then processed and made ready to be modulated into audio. The step of generating the audio was not implemented in this article, but the author suggested using external hardware or a MCU capable of generating audio. This article does show that a MCU can at least be used to generate the data that is to be modulated into audio.
+
+There is a implementation of AFSK generation using an Arduino\cite{arduino_afsk}.
+
+
+
+
+\subsection{Existing Work} % Change the name of this section, doesn't seem right.
 
 
 \section{Hardware}
+Newer devices, such as the STM32, have powerful ARM cores matched up with other hardware inside of small single chip MCU packages. With peripherals like ADCs and DACs, along side DMA, audio can be cleanly generated in real time. This can be used to generate modulated data streams, with one common piece of hardware.
+
 The idea of this project is that a generic microcontroller (MCU) is capable of acting as a software defined modem. Given this, the hardware will be kept simple. A single MCU will be used to act as the software modem. The modem will be connected to an external host/client, this client will control the modem. The modem has a single audio output and audio input, this can connected to various types of physical mediums to transfer the data that is modulated in the audio from one modem to another.
 
 \includegraphics[width=4in]{images/hardware_outline}
@@ -79,11 +89,13 @@ IMAGE OF MODULATION - create a timeline graphic that shows the hardware interrup
 
 \subsection{Demodulation}
 
-\include{audio_waveform_generation}
+\subsection{External Communication}
 
-\begin{itemize}
-  \item Sine Wave Generation
-  \item 
-\end{itemize}
+\section{Testing}
+
+\section{Conclusion}
+
+\bibliographystyle{plain}
+\bibliography{refs}
 
 \end{document}
