@@ -17,3 +17,14 @@
   - https://static.googleusercontent.com/media/research.google.com/en//archive/gfs-sosp2003.pdf
 
 Main takeaway: there are so many examples of this type of work, I just need to start looking for them.
+
+## 18 Oct 2023
+- Catch up meeting
+
+## 25 Oct 2023
+- Things that Ren mentioned may be worth looking into:
+  - https://powderwireless.net/
+  - https://sigmobile.org/mobicom/2023/
+- Try to find academic sources for the paper
+- arxiv.org
+- Went over finding good conferences/publisher
