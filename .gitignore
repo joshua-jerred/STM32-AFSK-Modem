@@ -2,4 +2,11 @@ latex/out
 stm32_afsk/build
 __pycache__
 .metadata
+
+# LaTeX
+*.aux
 *.log
+*.synctex.gz
+*.fdb_latex
+*.fls
+*.fdb_latexmk
