@@ -36,10 +36,32 @@ When looking for the appropriate MCU for this project there were a few requireme
 \end{itemize}
 
 
-\section{Waveform Generation}
+\section{Software Implementation}
+\subsection{Waveform Generation}
+Any method of audio modulation requires that a waveform be generated. This waveform is then modified to represent unique symbols. Therefore, a MCU must be able to generate a simple sine wave. With AFSK being the primary modulation mode for this project, a 1200 Hz wave is generated.
+
+The goal was to have the MCU generate a non-changing sine wave without a large impact to CPU usage. Using the DAC, alongside DMA, and a hardware timer. The DAC will output a constant voltage given a constant 12-bit value. Utilizing an array of sine wave values, the DMA will transfer the values to the DAC at a constant rate set by a hardware timer. A single cycle of the sine wave is represented by 128 12-bit values. Given this information, and a hardware clock, the timer can be configured to trigger at a rate that will generate a sine wave at a given rate.
+
+\[
+  F_{trigger} = \frac{C_{APB1}}{(PSC+1)*(ARR+1)}
+\]
+where:
+\begin{itemize}
+  \item[$C_{APB1}$] is the clock frequency of the APB1 bus (90 MHz)
+  \item[$PSC$] is the prescaler value
+  \item[$ARR$] is the auto-reload value
+  \item[$F_{trigger}$] is the frequency of the trigger (1200 Hz)
+\end{itemize}
+
+\[
+  F_{output} = \frac{F_{trigger}}{N_{samples}}
+\]
+
+\subsection{Data Modulation}
+
+
 \include{audio_waveform_generation}
 
-\section{Software Implementation}
 \begin{itemize}
   \item Sine Wave Generation
   \item 

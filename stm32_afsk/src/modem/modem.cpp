@@ -33,7 +33,15 @@ bool Modem::encodeNewAfskPacket(etl::span<const uint8_t> data) {
 }
 
 uint16_t Modem::getAdcValue() {
-  return 2500;
+  constexpr uint16_t kAdcResolution = 12;
+  HAL_ADC_Start(&rx_adc_);
+
+  HAL_ADC_PollForConversion(&rx_adc_, 1); // 1ms timeout
+  // Read The ADC Conversion Result & Map It To PWM DutyCycle
+  uint16_t result = HAL_ADC_GetValue(&rx_adc_);
+  TIM2->CCR1 = (kAdcResolution << 4);
+
+  return result;
 }
 
 void Modem::startWaveform() {
