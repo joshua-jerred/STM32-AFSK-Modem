@@ -1,6 +1,17 @@
-\documentclass{journal}
+\documentclass[notitlepage]{report}
+\usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
+
 \usepackage{graphicx}
 \usepackage{amsmath}
+
+% Title Page Theme
+\usepackage{titling}
+\pretitle{\begin{center}\Huge\bfseries}
+\posttitle{\par\end{center}\vskip 0.5em}
+\preauthor{\begin{center}\Large\ttfamily}
+\postauthor{\end{center}}
+\predate{\par\large\centering}
+\postdate{\par\vskip 1em}
 
 \title{A Software Defined Modem Using Commodity Micro-Controllers}
 \author{Joshua Jerred}
@@ -9,18 +20,27 @@
 \begin{document}
 \maketitle
 
+\begin{abstract}
+  Modems, devices used to convert digital signals to and from analog signals are traditionally implemented using dedicated hardware, locking them to a specific modulation mode. With the rise of Software Defined Radio (SDR) and the increasing power of common micro-controllers (MCUs), generic hardware can be used to create a software defined modem. With the implementation of data modulation and demodulation in software, a single chip can be used for multiple communication modes, agnostic of hardware and a physical medium. Using the affordable STM32F4, along with it's analog-to-digital (ADC) converters, digital-to-analog (DAC) converters, direct-memory-access (DMA), and hardware timers, a multi-mode modem can be implemented.
+\end{abstract}
+  
 \section{Introduction}
 
 Commodity micro-controllers (MCUs), are capable of completing a wide variety of tasks thanks to their integrated hardware. This project aims to utilize the hardware built into a generic MCU to create a software defined modem. This modem will be capable of modulating and demodulating audio signals, agnostic of the physical medium and specific modulation mode. This will show that a commodity MCU  Although this project will focus on an older modulation mode, AFSK, the goal is to show that a modern MCU is powerful enough, given it's rich feature set, to fully implement a software defined modem without the need for any additional hardware.
 
 \section{Background}
 
+\subsection{Existing Work}
+
+Software Defined Radio (SDR) is a term used to describe radio hardware that can be configured in software. This provides greater flexibility and allows for the use of a single piece of hardware for many purposes. The power of SDR was shown throughout the SpeakEasy, a project started in 1991 to help the United States Military address problems related to interoperability between branches\cite{speakeasy}. The project showed that a combination of hardware and software could be used to create a radio system that can be configured to operate on many different frequencies and modulation modes. Previously this had to be done with unique hardware for each mode.
+
 When it comes to specifically using an MCU for this purpose, there are existing implementation. An article posted in ARRL QST in october of 1998 described using a PIC MCU to create AX.25 (describe ax.25) frames audio\cite{hansen_ax25}. These frames were then processed and made ready to be modulated into audio. The step of generating the audio was not implemented in this article, but the author suggested using external hardware or a MCU capable of generating audio. This article does show that a MCU can at least be used to generate the data that is to be modulated into audio.
 
-There is a implementation of AFSK generation using an Arduino\cite{arduino_afsk}.
+There is a implementation of AFSK audio generation using an Arduino (ATmega 2560)\cite{arduino_afsk}. In this implementation, the AFSK generation was done in software with a interrupt being triggered for each sample of the audio stream. Demodulation was not implemented in this project.
 
+\subsection{AFSK}
 
-
+\subsection{ADC/DAC/DMA}
 
 \subsection{Existing Work} % Change the name of this section, doesn't seem right.
 
@@ -28,7 +48,10 @@ There is a implementation of AFSK generation using an Arduino\cite{arduino_afsk}
 \section{Hardware}
 Newer devices, such as the STM32, have powerful ARM cores matched up with other hardware inside of small single chip MCU packages. With peripherals like ADCs and DACs, along side DMA, audio can be cleanly generated in real time. This can be used to generate modulated data streams, with one common piece of hardware.
 
+Although using a Digital Signal Processor (DSP) would be useful... more here
+
 The idea of this project is that a generic microcontroller (MCU) is capable of acting as a software defined modem. Given this, the hardware will be kept simple. A single MCU will be used to act as the software modem. The modem will be connected to an external host/client, this client will control the modem. The modem has a single audio output and audio input, this can connected to various types of physical mediums to transfer the data that is modulated in the audio from one modem to another.
+
 
 \includegraphics[width=4in]{images/hardware_outline}
 

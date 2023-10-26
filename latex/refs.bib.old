@@ -1,13 +1,3 @@
-@article{hansen_ax25,
-  title={PIC-et Radio: How to Send AX.25 UI Frames Using Inexpensive PIC Microprocessors},
-  author={John Hansen A.},
-  journal={ARRL and TAPR Digital Communications Conference},
-  volume={27th},
-  pages={29-37},
-  year={1998},
-  publisher={}
-}
-
 @manual{st_datasheet,
   author       = {STMicroelectronics},
   title        = {DS9484 - STM32F429xx Data sheet},
@@ -32,16 +22,6 @@
   year={2009},
   pages={1763-1768},
   doi={10.1109/EURCON.2009.5167882}}
-
-@INPROCEEDINGS{8475994,
-  author={Velasco, Luis Sánchez and Aranda, Andrés Roldán},
-  booktitle={2018 XIII Technologies Applied to Electronics Teaching Conference (TAEE)}, 
-  title={Software Based AFSK Generation on Arduino}, 
-  year={2018},
-  volume={},
-  number={},
-  pages={1-5},
-  doi={10.1109/TAEE.2018.8475994}}
 
 @INPROCEEDINGS{985785,
   author={Lallo, P.},
