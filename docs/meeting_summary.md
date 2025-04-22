@@ -28,3 +28,8 @@ Main takeaway: there are so many examples of this type of work, I just need to s
 - Try to find academic sources for the paper
 - arxiv.org
 - Went over finding good conferences/publisher
+
+## 1 Nov 2023
+- Summarize Sources
+- UCUR abstract due this friday if I want to present a poster in February
+  - Poster is 4'x2'

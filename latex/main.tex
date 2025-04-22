@@ -21,9 +21,9 @@
 \maketitle
 
 \begin{abstract}
-  Modems, devices used to convert digital signals to and from analog signals are traditionally implemented using dedicated hardware, locking them to a specific modulation mode. With the rise of Software Defined Radio (SDR) and the increasing power of common micro-controllers (MCUs), generic hardware can be used to create a software defined modem. With the implementation of data modulation and demodulation in software, a single chip can be used for multiple communication modes, agnostic of hardware and a physical medium. Using the affordable STM32F4, along with it's analog-to-digital (ADC) converters, digital-to-analog (DAC) converters, direct-memory-access (DMA), and hardware timers, a multi-mode modem can be implemented.
+  Modems, devices used to convert digital signals to and from analog signals are traditionally implemented using dedicated hardware, locking them to a specific modulation mode. With the rise of Software Defined Radio (SDR) and the increasing power of common micro-controllers (MCUs), generic hardware can be used to create a software defined modem. With the implementation of data modulation and demodulation in software, a single chip can be used for multiple communication modes. Using the affordable STM32F4, along with it's analog-to-digital (ADC) converters, digital-to-analog (DAC) converters, direct-memory-access (DMA), and hardware timers, a multi-mode modem can be implemented agnostic of both hardware and a physical medium.
 \end{abstract}
-  
+
 \section{Introduction}
 
 Commodity micro-controllers (MCUs), are capable of completing a wide variety of tasks thanks to their integrated hardware. This project aims to utilize the hardware built into a generic MCU to create a software defined modem. This modem will be capable of modulating and demodulating audio signals, agnostic of the physical medium and specific modulation mode. This will show that a commodity MCU  Although this project will focus on an older modulation mode, AFSK, the goal is to show that a modern MCU is powerful enough, given it's rich feature set, to fully implement a software defined modem without the need for any additional hardware.
